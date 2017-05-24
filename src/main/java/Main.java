@@ -7,29 +7,34 @@ import static com.mongodb.client.model.Filters.eq;
 import java.io.FileReader;
 import java.net.UnknownHostException;
 import org.bson.Document;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
 
 public class Main {
     
-    
+    private static String id;
     
     public static void main(String [ ] args) throws UnknownHostException{
         
+        JSONArray stix = getJson();
         MongoClient mongoClient = new MongoClient("localhost", 27017);        
         MongoDatabase db = mongoClient.getDatabase("myDB");
-        MongoCollection<Document> coll = db.getCollection("TestCollection");
+        MongoCollection<Document> coll = db.getCollection(id);
         
-        //Document doc = new Document("name", "MongoDB").append("test", "50");
-        JSONObject stix = getJson();
-        Document stixdoc = Document.parse(stix.toString());
         
-        //coll.insertOne(stixdoc);
         
+        
+        
+        for(Object jsonObject : stix){
+        Document stixdoc = Document.parse(jsonObject.toString());
+        
+        coll.insertOne(stixdoc);
+        }
        
-        //FindIterable<Document> cursor = coll.find();
-        FindIterable<Document> cursor = coll.find(eq("objects.type", "malware"));
+      
+        FindIterable<Document> cursor = coll.find(eq("type", "campaign"));
         for(Document document : cursor){
            
         System.out.println(document);
@@ -38,7 +43,7 @@ public class Main {
         
     }
     
-    private static JSONObject getJson(){
+    private static JSONArray getJson(){
         
         JSONParser parser = new JSONParser();
         
@@ -46,11 +51,12 @@ public class Main {
             
             Object obj = parser.parse(new FileReader("D:\\Daten\\Bachelorarbeit\\poisonivy.json"));
             JSONObject jsonObject = (JSONObject) obj;
-            String type = (String) jsonObject.get("type");
-            //System.out.println(type);
-            String str = jsonObject.toJSONString();
-            //System.out.println(str);
-            return jsonObject;
+            id = (String) jsonObject.get("id");
+            
+            JSONArray jsonArray = (JSONArray) jsonObject.get("objects");
+            //System.out.println(jsonArray);                   
+           
+            return jsonArray;
         }
         catch(Exception e){
             e.printStackTrace();
