@@ -28,7 +28,7 @@ public class Main {
         //JSONArray stix = getJson();
         MongoClient mongoClient = new MongoClient("localhost", 27017);        
         MongoDatabase db = mongoClient.getDatabase("myDB");
-        MongoCollection<Document> coll = db.getCollection(id);        
+        MongoCollection<Document> coll = db.getCollection("bundle--ac946f1d-6a0e-4a9d-bc83-3f1f3bfda6ba");        
         
         /*for(Object jsonObject : stix){
         Document stixdoc = Document.parse(jsonObject.toString());
@@ -41,11 +41,20 @@ public class Main {
         
         
         FindIterable<Document> cursor = coll.find(in("type", "campaign", "malware", "attack-pattern", "course-of-action",
-                "identity", "vulnerability", "tool", "indicator", "intrusion-set", "observed-data", "threat-actor"));
+                "identity", "vulnerability", "tool", "indicator", "intrusion-set", "observed-data", "threat-actor", "report"));
         
         for(Document document : cursor){
             
         document.remove("_id");
+        
+        if(document.containsKey("created_by_ref")){
+            Document newRelationship = new Document("id", "relationshipcreatedby").append("type", "relationship").
+                    append("source_ref", document.get("created_by_ref")).append("target_ref", document.get("id")).
+                    append("created", document.get("created")).append("modified", document.get("modified")).
+                    append("relationship_type", "created_by_ref");
+            coll.insertOne(newRelationship);
+        }
+        
         nodes.add(document);
         
         }        
