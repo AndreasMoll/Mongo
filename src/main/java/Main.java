@@ -25,12 +25,15 @@ public class Main {
     
     public static void main(String [ ] args) throws UnknownHostException{
         
-        //JSONArray stix = getJson();
+        
         MongoClient mongoClient = new MongoClient("localhost", 27017);        
         MongoDatabase db = mongoClient.getDatabase("myDB");
-        MongoCollection<Document> coll = db.getCollection("bundle--ac946f1d-6a0e-4a9d-bc83-3f1f3bfda6ba");        
+        MongoCollection<Document> coll = db.getCollection("bundle--ac946f1d-6a0e-4a9d-bc83-3f1f3bfda6ba");  
         
-        /*for(Object jsonObject : stix){
+        //For new Data
+        /*MongoCollection<Document> coll = db.getCollection("id");  
+        JSONArray stix = getJson();
+        for(Object jsonObject : stix){
         Document stixdoc = Document.parse(jsonObject.toString());
         
         coll.insertOne(stixdoc);
@@ -90,7 +93,7 @@ public class Main {
         JSONObject finalJson = new JSONObject();
         finalJson.put("nodes", nodes);
         finalJson.put("links", links);
-        try(FileWriter file = new FileWriter("D:\\test.json")){
+        try(FileWriter file = new FileWriter("C:\\Daten\\test.json")){
             file.write(finalJson.toJSONString());
             file.flush();
         }
