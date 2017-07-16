@@ -95,7 +95,7 @@ public class Main {
         JSONObject finalJson = new JSONObject(); //Create final JSON with a nodes- and a links-array
         finalJson.put("nodes", nodes);
         finalJson.put("links", links);
-        try(FileWriter file = new FileWriter("D:\\test.json")){
+        try(FileWriter file = new FileWriter("C:\\Daten\\test.json")){
             file.write(finalJson.toJSONString());
             file.flush();
         }
