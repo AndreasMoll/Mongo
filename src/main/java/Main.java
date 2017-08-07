@@ -22,25 +22,21 @@ public class Main {
     private static String id;
     private static JSONArray newNodes = new JSONArray();
     
-    //Reads a STIX .json file, stores the data in a Mongo collection and creates a new .json file with additional indexes for d3-usage
+    //Reads a STIX .json file, stores the data in a Mongo collection and creates a new .json file with additional indexes for d3 usage
     public static void main(String [ ] args) throws UnknownHostException{
         
         
         MongoClient mongoClient = new MongoClient("localhost", 27017);        
         MongoDatabase db = mongoClient.getDatabase("myDB");
-        MongoCollection<Document> coll = db.getCollection("bundle--ac946f1d-6a0e-4a9d-bc83-3f1f3bfda6ba"); //Replace with "id" when adding a new stix file to the database
-        
-        
-        //For adding a new stix file to the database
-        /*
+                
+        //For adding a new stix file to the database        
         JSONArray stix = getJson();
         MongoCollection<Document> coll = db.getCollection(id);
         
         for(Object jsonObject : stix){
-        Document stixdoc = Document.parse(jsonObject.toString());
-        
+        Document stixdoc = Document.parse(jsonObject.toString());        
         coll.insertOne(stixdoc);
-        }*/
+        }
        
         JSONArray nodes = new JSONArray();
         JSONArray links = new JSONArray();        
@@ -95,7 +91,7 @@ public class Main {
         JSONObject finalJson = new JSONObject(); //Create final JSON with a nodes- and a links-array
         finalJson.put("nodes", nodes);
         finalJson.put("links", links);
-        try(FileWriter file = new FileWriter("C:\\Daten\\test.json")){
+        try(FileWriter file = new FileWriter("D:\\test.json")){
             file.write(finalJson.toJSONString());
             file.flush();
         }
@@ -120,7 +116,6 @@ public class Main {
                     else{
                         
                     }
-                    //System.out.println(jsonObject.get("id"));
                 } catch (ParseException ex) {
                     Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
                 }
